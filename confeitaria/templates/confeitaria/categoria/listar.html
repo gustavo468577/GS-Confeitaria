@@ -1,0 +1,35 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Categorias{% endblock %}
+
+{% block conteudo %}
+    <h2>Categorias</h2>
+    <p><a href="{% url 'categoria_criar' %}">Nova categoria</a></p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descricao</th>
+            <th>Ativo</th>
+            <th>Acoes</th>
+        </tr>
+        {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.id }}</td>
+                <td>{{ categoria.nome }}</td>
+                <td>{{ categoria.descricao }}</td>
+                <td>{{ categoria.ativo }}</td>
+                <td>
+                    <a href="{% url 'categoria_detalhar' categoria.id %}">Ver</a>
+                    <a href="{% url 'categoria_editar' categoria.id %}">Editar</a>
+                    <a href="{% url 'categoria_excluir' categoria.id %}">Excluir</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">Nenhuma categoria cadastrada.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

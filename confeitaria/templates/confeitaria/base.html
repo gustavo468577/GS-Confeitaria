@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block titulo %}Confeitaria{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Confeitaria</h1>
+        <nav>
+            <a href="{% url 'inicio' %}">Inicio</a> |
+            <a href="{% url 'categoria_listar' %}">Categorias</a> |
+            <a href="{% url 'produto_listar' %}">Produtos</a> |
+            <a href="{% url 'cliente_listar' %}">Clientes</a> |
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        {% block conteudo %}{% endblock %}
+    </main>
+</body>
+</html>

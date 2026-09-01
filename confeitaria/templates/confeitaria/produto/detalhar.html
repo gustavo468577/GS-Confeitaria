@@ -1,0 +1,20 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Detalhes do produto{% endblock %}
+
+{% block conteudo %}
+    <h2>Detalhes do produto</h2>
+
+    <p><strong>ID:</strong> {{ produto.id }}</p>
+    <p><strong>Categoria:</strong> {{ produto.categoria }}</p>
+    <p><strong>Nome:</strong> {{ produto.nome }}</p>
+    <p><strong>Descricao:</strong> {{ produto.descricao }}</p>
+    <p><strong>Preco:</strong> {{ produto.preco }}</p>
+    <p><strong>Ativo:</strong> {{ produto.ativo }}</p>
+
+    <p>
+        <a href="{% url 'produto_editar' produto.id %}">Editar</a>
+        <a href="{% url 'produto_excluir' produto.id %}">Excluir</a>
+        <a href="{% url 'produto_listar' %}">Voltar</a>
+    </p>
+{% endblock %}  

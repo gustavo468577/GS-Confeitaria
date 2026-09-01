@@ -1,0 +1,14 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Excluir cliente{% endblock %}
+
+{% block conteudo %}
+    <h2>Excluir cliente</h2>
+    <p>Tem certeza que deseja excluir o cliente "{{ cliente }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar exclusao</button>
+        <a href="{% url 'cliente_listar' %}">Cancelar</a>
+    </form>
+{% endblock %}

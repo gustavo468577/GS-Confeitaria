@@ -1,0 +1,37 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Clientes{% endblock %}
+
+{% block conteudo %}
+    <h2>Clientes</h2>
+    <p><a href="{% url 'cliente_criar' %}">Novo cliente</a></p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Endereco</th>
+            <th>Acoes</th>
+        </tr>
+        {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.telefone }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>{{ cliente.endereco }}</td>
+                <td>
+                    <a href="{% url 'cliente_detalhar' cliente.id %}">Ver</a>
+                    <a href="{% url 'cliente_editar' cliente.id %}">Editar</a>
+                    <a href="{% url 'cliente_excluir' cliente.id %}">Excluir</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">Nenhum cliente cadastrado.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

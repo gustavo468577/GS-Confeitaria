@@ -1,0 +1,18 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Detalhes da categoria{% endblock %}
+
+{% block conteudo %}
+    <h2>Detalhes da categoria</h2>
+
+    <p><strong>ID:</strong> {{ categoria.id }}</p>
+    <p><strong>Nome:</strong> {{ categoria.nome }}</p>
+    <p><strong>Descricao:</strong> {{ categoria.descricao }}</p>
+    <p><strong>Ativo:</strong> {{ categoria.ativo }}</p>
+
+    <p>
+        <a href="{% url 'categoria_editar' categoria.id %}">Editar</a>
+        <a href="{% url 'categoria_excluir' categoria.id %}">Excluir</a>
+        <a href="{% url 'categoria_listar' %}">Voltar</a>
+    </p>
+{% endblock %}

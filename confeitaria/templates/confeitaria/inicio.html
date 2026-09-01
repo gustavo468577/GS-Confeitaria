@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confeitaria</title>
-</head>
-<body>
-<header>
-    <h1>Bem-vindo à Confeitaria!</h1>
-</header>
-</body>
-</html>
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Inicio{% endblock %}
+
+{% block conteudo %}
+    <h2>Tela inicial</h2>
+    <p>Escolha uma opcao no menu acima.</p>
+{% endblock %}

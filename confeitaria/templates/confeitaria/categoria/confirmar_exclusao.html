@@ -1,0 +1,14 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Excluir categoria{% endblock %}
+
+{% block conteudo %}
+    <h2>Excluir categoria</h2>
+    <p>Tem certeza que deseja excluir a categoria "{{ categoria }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar exclusao</button>
+        <a href="{% url 'categoria_listar' %}">Cancelar</a>
+    </form>
+{% endblock %}
