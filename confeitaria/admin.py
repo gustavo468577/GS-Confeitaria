@@ -21,12 +21,12 @@ class ProdutoAdmin(admin.ModelAdmin):
     search_fields = ("nome", "descricao", "categoria__nome")
     list_editable = ("preco", "ativo")
 
-
+ 
 # Configura a exibicao de clientes no Django Admin.
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ("nome", "telefone", "email", "endereco")
-    search_fields = ("nome", "telefone", "email", "endereco")
+    list_display = ("username", "first_name", "last_name", "email", "telefone", "endereco")
+    search_fields = ("username", "first_name", "last_name", "email", "telefone", "endereco")
 
 
 # Permite cadastrar itens diretamente dentro do pedido no Admin.
@@ -39,17 +39,17 @@ class ItemPedidoInline(admin.TabularInline):
 # Configura a exibicao de pedidos no Django Admin.
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ("id", "cliente", "usuario", "criado_em",
-                    "data_entrega", "status", "total")
+    list_display = ("id", "cliente", "criado_em", "data_entrega", "status", "total")
     list_filter = ("status", "criado_em", "data_entrega")
     search_fields = (
         "id",
-        "cliente__nome",
+        "cliente__username",
+        "cliente__first_name",
+        "cliente__last_name",
         "cliente__telefone",
         "cliente__email",
-        "usuario__username",
     )
-    autocomplete_fields = ("cliente", "usuario")
+    autocomplete_fields = ("cliente",)
     date_hierarchy = "criado_em"
     inlines = (ItemPedidoInline,)
 
@@ -61,8 +61,7 @@ class PedidoAdmin(admin.ModelAdmin):
 # Configura a exibicao de itens de pedido no Django Admin.
 @admin.register(ItemPedido)
 class ItemPedidoAdmin(admin.ModelAdmin):
-    list_display = ("pedido", "produto", "quantidade",
-                    "preco_unitario", "subtotal")
+    list_display = ("pedido", "produto", "quantidade", "valor_unitario", "subtotal")
     list_filter = ("produto",)
     search_fields = ("pedido__id", "produto__nome")
     autocomplete_fields = ("pedido", "produto")
@@ -70,3 +69,7 @@ class ItemPedidoAdmin(admin.ModelAdmin):
     # Mostra o subtotal calculado do item na listagem do Admin.
     def subtotal(self, obj):
         return obj.calcular_subtotal()
+
+    # Mostra o valor unitario vindo do produto.
+    def valor_unitario(self, obj):
+        return obj.produto.preco

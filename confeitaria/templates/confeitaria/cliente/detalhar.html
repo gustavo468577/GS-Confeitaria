@@ -6,7 +6,10 @@
     <h2>Detalhes do cliente</h2>
 
     <p><strong>ID:</strong> {{ cliente.id }}</p>
-    <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+    <p><strong>Usuario:</strong> {{ cliente.username }}</p>
+    <p><strong>Nome:</strong> {{ cliente.get_full_name }}</p>
+    <p><strong>Primeiro nome:</strong> {{ cliente.first_name }}</p>
+    <p><strong>Sobrenome:</strong> {{ cliente.last_name }}</p>
     <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
     <p><strong>Email:</strong> {{ cliente.email }}</p>
     <p><strong>Endereco:</strong> {{ cliente.endereco }}</p>

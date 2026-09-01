@@ -1,0 +1,39 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Pedidos{% endblock %}
+
+{% block conteudo %}
+    <h2>Pedidos</h2>
+    <p><a href="{% url 'pedido_criar' %}">Novo pedido</a></p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Criado em</th>
+            <th>Data de entrega</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Acoes</th>
+        </tr>
+        {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.id }}</td>
+                <td>{{ pedido.cliente }}</td>
+                <td>{{ pedido.criado_em }}</td>
+                <td>{{ pedido.data_entrega }}</td>
+                <td>{{ pedido.status }}</td>
+                <td>{{ pedido.calcular_total }}</td>
+                <td>
+                    <a href="{% url 'pedido_detalhar' pedido.id %}">Ver</a>
+                    <a href="{% url 'pedido_editar' pedido.id %}">Editar</a>
+                    <a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">Nenhum pedido cadastrado.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

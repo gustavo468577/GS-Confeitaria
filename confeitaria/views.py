@@ -4,8 +4,10 @@ from .forms import (
     CategoriaForm,
     ClienteForm,
     ProdutoForm,
+    PedidoForm,
+    ItemPedidoForm,
 )
-from .models import Categoria, Cliente, Produto
+from .models import Categoria, Cliente, Produto, Pedido, ItemPedido
 
 
 # Mostra a tela inicial do sistema.
@@ -182,3 +184,117 @@ def cliente_excluir(request, pk):
 
     contexto = {'cliente': cliente}
     return render(request, 'confeitaria/cliente/confirmar_exclusao.html', contexto)
+
+
+# FUNCOES DE PEDIDO
+# Lista todos os pedidos cadastrados.
+def pedido_listar(request):
+    pedidos = Pedido.objects.all()
+    contexto = {'pedidos': pedidos}
+    return render(request, 'confeitaria/pedido/listar.html', contexto)
+
+
+# Mostra os detalhes de um pedido.
+def pedido_detalhar(request, pk):
+    pedido = get_object_or_404(Pedido, pk=pk)
+    contexto = {'pedido': pedido}
+    return render(request, 'confeitaria/pedido/detalhar.html', contexto)
+
+
+# Cria um novo pedido.
+def pedido_criar(request):
+    if request.method == 'POST':
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('pedido_listar')
+    else:
+        form = PedidoForm()
+
+    contexto = {'form': form}
+    return render(request, 'confeitaria/pedido/form.html', contexto)
+
+
+# Edita um pedido existente.
+def pedido_editar(request, pk):
+    pedido = get_object_or_404(Pedido, pk=pk)
+
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('pedido_listar')
+    else:
+        form = PedidoForm(instance=pedido)
+
+    contexto = {'form': form, 'pedido': pedido}
+    return render(request, 'confeitaria/pedido/form.html', contexto)
+
+
+# Exclui um pedido existente.
+def pedido_excluir(request, pk):
+    pedido = get_object_or_404(Pedido, pk=pk)
+
+    if request.method == 'POST':
+        pedido.delete()
+        return redirect('pedido_listar')
+
+    contexto = {'pedido': pedido}
+    return render(request, 'confeitaria/pedido/confirmar_exclusao.html', contexto)
+
+
+# FUNCOES DE ITEM PEDIDO
+# Lista todos os itens de pedido cadastrados.
+def item_pedido_listar(request):
+    itens_pedido = ItemPedido.objects.all()
+    contexto = {'itens_pedido': itens_pedido}
+    return render(request, 'confeitaria/item_pedido/listar.html', contexto)
+
+
+# Mostra os detalhes de um item de pedido.
+def item_pedido_detalhar(request, pk):
+    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+    contexto = {'item_pedido': item_pedido}
+    return render(request, 'confeitaria/item_pedido/detalhar.html', contexto)
+
+
+# Cria um novo item de pedido.
+def item_pedido_criar(request):
+    if request.method == 'POST':
+        form = ItemPedidoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('item_pedido_listar')
+    else:
+        form = ItemPedidoForm()
+
+    contexto = {'form': form}
+    return render(request, 'confeitaria/item_pedido/form.html', contexto)
+
+
+# Edita um item de pedido existente.
+def item_pedido_editar(request, pk):
+    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+
+    if request.method == 'POST':
+        form = ItemPedidoForm(request.POST, instance=item_pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('item_pedido_listar')
+    else:
+        form = ItemPedidoForm(instance=item_pedido)
+
+    contexto = {'form': form, 'item_pedido': item_pedido}
+    return render(request, 'confeitaria/item_pedido/form.html', contexto)
+
+
+# Exclui um item de pedido existente.
+def item_pedido_excluir(request, pk):
+    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+
+    if request.method == 'POST':
+        item_pedido.delete()
+        return redirect('item_pedido_listar')
+
+    contexto = {'item_pedido': item_pedido}
+    return render(request, 'confeitaria/item_pedido/confirmar_exclusao.html', contexto)

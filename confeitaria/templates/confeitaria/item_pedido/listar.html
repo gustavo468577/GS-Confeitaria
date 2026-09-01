@@ -1,0 +1,39 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Itens de pedido{% endblock %}
+
+{% block conteudo %}
+    <h2>Itens de pedido</h2>
+    <p><a href="{% url 'item_pedido_criar' %}">Novo item de pedido</a></p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Pedido</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor unitario</th>
+            <th>Subtotal</th>
+            <th>Acoes</th>
+        </tr>
+        {% for item_pedido in itens_pedido %}
+            <tr>
+                <td>{{ item_pedido.id }}</td>
+                <td>{{ item_pedido.pedido }}</td>
+                <td>{{ item_pedido.produto }}</td>
+                <td>{{ item_pedido.quantidade }}</td>
+                <td>{{ item_pedido.produto.preco }}</td>
+                <td>{{ item_pedido.calcular_subtotal }}</td>
+                <td>
+                    <a href="{% url 'item_pedido_detalhar' item_pedido.id %}">Ver</a>
+                    <a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>
+                    <a href="{% url 'item_pedido_excluir' item_pedido.id %}">Excluir</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">Nenhum item de pedido cadastrado.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

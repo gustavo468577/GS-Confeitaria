@@ -26,14 +26,12 @@ class Produto(models.Model):
         return self.nome
 
 
-class Cliente(models.Model):
-    nome = models.CharField(max_length=150)
+class Cliente(User):
     telefone = models.CharField(max_length=20)
-    email = models.EmailField()
     endereco = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.nome
+        return self.get_full_name() or self.username
 
 
 class Pedido(models.Model):
@@ -49,12 +47,6 @@ class Pedido(models.Model):
         Cliente,
         on_delete=models.CASCADE,
         related_name="pedidos"
-    )
-
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name="pedidos_registrados"
     )
 
     status = models.CharField(
@@ -83,7 +75,7 @@ class Pedido(models.Model):
         self.save()
 
     def __str__(self):
-        return f"Pedido {self.id} - {self.cliente.nome}"
+        return f"Pedido {self.id} - {self.cliente}"
 
 
 class ItemPedido(models.Model):
@@ -101,13 +93,8 @@ class ItemPedido(models.Model):
 
     quantidade = models.PositiveIntegerField(default=1)
 
-    preco_unitario = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-
     def calcular_subtotal(self):
-        return self.quantidade * self.preco_unitario
+        return self.quantidade * self.produto.preco
 
     def __str__(self):
         return f"{self.produto.nome} - {self.quantidade}x"

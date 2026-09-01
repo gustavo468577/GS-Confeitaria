@@ -1,0 +1,43 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Detalhes do pedido{% endblock %}
+
+{% block conteudo %}
+    <h2>Detalhes do pedido</h2>
+
+    <p><strong>ID:</strong> {{ pedido.id }}</p>
+    <p><strong>Cliente:</strong> {{ pedido.cliente }}</p>
+    <p><strong>Criado em:</strong> {{ pedido.criado_em }}</p>
+    <p><strong>Data de entrega:</strong> {{ pedido.data_entrega }}</p>
+    <p><strong>Status:</strong> {{ pedido.status }}</p>
+    <p><strong>Observacao:</strong> {{ pedido.observacao }}</p>
+    <p><strong>Total:</strong> {{ pedido.calcular_total }}</p>
+
+    <h3>Itens do pedido</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor unitario</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for item in pedido.itens.all %}
+            <tr>
+                <td>{{ item.produto }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>{{ item.produto.preco }}</td>
+                <td>{{ item.calcular_subtotal }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">Nenhum item cadastrado neste pedido.</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p>
+        <a href="{% url 'pedido_editar' pedido.id %}">Editar</a>
+        <a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>
+        <a href="{% url 'pedido_listar' %}">Voltar</a>
+    </p>
+{% endblock %}

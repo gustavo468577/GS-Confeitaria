@@ -1,0 +1,20 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Detalhes do item de pedido{% endblock %}
+
+{% block conteudo %}
+    <h2>Detalhes do item de pedido</h2>
+
+    <p><strong>ID:</strong> {{ item_pedido.id }}</p>
+    <p><strong>Pedido:</strong> {{ item_pedido.pedido }}</p>
+    <p><strong>Produto:</strong> {{ item_pedido.produto }}</p>
+    <p><strong>Quantidade:</strong> {{ item_pedido.quantidade }}</p>
+    <p><strong>Valor unitario:</strong> {{ item_pedido.produto.preco }}</p>
+    <p><strong>Subtotal:</strong> {{ item_pedido.calcular_subtotal }}</p>
+
+    <p>
+        <a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>
+        <a href="{% url 'item_pedido_excluir' item_pedido.id %}">Excluir</a>
+        <a href="{% url 'item_pedido_listar' %}">Voltar</a>
+    </p>
+{% endblock %}

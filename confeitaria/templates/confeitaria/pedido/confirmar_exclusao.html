@@ -1,0 +1,14 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Excluir pedido{% endblock %}
+
+{% block conteudo %}
+    <h2>Excluir pedido</h2>
+    <p>Tem certeza que deseja excluir o pedido "{{ pedido }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar exclusao</button>
+        <a href="{% url 'pedido_listar' %}">Cancelar</a>
+    </form>
+{% endblock %}

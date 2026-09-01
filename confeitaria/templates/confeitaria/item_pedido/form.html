@@ -1,0 +1,14 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Formulario de item de pedido{% endblock %}
+
+{% block conteudo %}
+    <h2>Formulario de item de pedido</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+        <a href="{% url 'item_pedido_listar' %}">Cancelar</a>
+    </form>
+{% endblock %}
