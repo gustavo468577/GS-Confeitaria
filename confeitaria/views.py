@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+# Mostra a tela inicial do sistema.
+def inicio(request):
+    return render(request, 'confeitaria/inicio.html')
