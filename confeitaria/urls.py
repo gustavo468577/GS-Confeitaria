@@ -1,9 +1,14 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_not_required
 from . import views
 
 urlpatterns = [
-    # URL da tela inicial.
     path('', views.inicio, name='inicio'),
+
+    path('cadastro/', views.cadastrar, name='cadastro'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     # URLs do CRUD de categorias.
     path('categorias/', views.categoria_listar, name='categoria_listar'),

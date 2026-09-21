@@ -1,4 +1,8 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_not_required
 from django.shortcuts import get_object_or_404, redirect, render
+from .forms import CustomUserCreationForm
 
 from .forms import (
     CategoriaForm,
@@ -9,7 +13,36 @@ from .forms import (
 )
 from .models import Categoria, Cliente, Produto, Pedido, ItemPedido
 
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
 
+        if form.is_valid():
+            usuario = form.get_user()
+            login(request, usuario)
+            return redirect('inicio')
+    else:
+        form = AuthenticationForm()
+
+    return render(
+        request,
+        'confeitaria/login.html',
+        {'form': form}
+    )
+
+
+def cadastrar(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+
+        if form.is_valid():
+            cliente = form.save()
+            login(request, cliente)
+            return redirect('inicio')
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'confeitaria/cadastro.html', {'form': form})
 # Mostra a tela inicial do sistema.
 def inicio(request):
     return render(request, 'confeitaria/inicio.html')

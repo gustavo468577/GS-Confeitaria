@@ -1,5 +1,8 @@
 from django import forms
 from .models import Categoria, Cliente, ItemPedido, Pedido, Produto
+from django.contrib.auth.forms import UserCreationForm
+
+
 
 
 # Formulario usado para criar e editar categorias.
@@ -44,3 +47,24 @@ class ItemPedidoForm(forms.ModelForm):
     class Meta:
         model = ItemPedido
         fields = ['pedido', 'produto', 'quantidade']
+
+#formulario de cadastro de usuario
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = Cliente
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'telefone',
+            'endereco',
+        ]
+
+    def save(self, commit=True):
+        usuario = super().save(commit=False)
+
+        if commit:
+            usuario.save()
+
+        return usuario

@@ -1,0 +1,25 @@
+{% extends 'confeitaria/base.html' %}
+
+{% block titulo %}Cadastro{% endblock %}
+
+{% block conteudo %}
+
+<div class="card">
+<h2>Criar conta</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Cadastrar</button>
+</form>
+
+<p>
+    Já possui uma conta?
+    <a href="{% url 'login' %}">Faça login</a>.
+</p>
+
+</div>
+
+{% endblock %}
