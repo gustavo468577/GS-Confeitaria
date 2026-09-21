@@ -9,6 +9,6 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Salvar</button>
-        <a href="{% url 'cliente_listar' %}">Cancelar</a>
+        <a href="{% url 'inicio' %}">Cancelar</a>
     </form>
 {% endblock %}

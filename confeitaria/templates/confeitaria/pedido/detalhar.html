@@ -36,8 +36,8 @@
     </table>
 
     <p>
-        <a href="{% url 'pedido_editar' pedido.id %}">Editar</a>
-        <a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>
+        {% if perms.confeitaria.change_pedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}<a href="{% url 'pedido_editar' pedido.id %}">Editar</a>{% endif %}
+        {% if perms.confeitaria.delete_pedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}<a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>{% endif %}
         <a href="{% url 'pedido_listar' %}">Voltar</a>
     </p>
 {% endblock %}

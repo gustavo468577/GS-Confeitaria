@@ -9,7 +9,7 @@
     <h2>Produtos</h2>
 
     <p>
-        <a href="{% url 'produto_criar' %}">Novo produto</a>
+        {% if perms.confeitaria.add_produto %}<a href="{% url 'produto_criar' %}">Novo produto</a>{% endif %}
     </p>
 
     <table border="1" cellpadding="5">
@@ -35,9 +35,9 @@
                 <td>
                     <a href="{% url 'produto_detalhar' produto.id %}">Ver</a>
 
-                    <a href="{% url 'produto_editar' produto.id %}">Editar</a>
+                    {% if perms.confeitaria.change_produto %}<a href="{% url 'produto_editar' produto.id %}">Editar</a>{% endif %}
 
-                    <a href="{% url 'produto_excluir' produto.id %}">Excluir</a>
+                    {% if perms.confeitaria.delete_produto %}<a href="{% url 'produto_excluir' produto.id %}">Excluir</a>{% endif %}
                 </td>
             </tr>
 

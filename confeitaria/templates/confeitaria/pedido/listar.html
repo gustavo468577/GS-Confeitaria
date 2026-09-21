@@ -4,7 +4,7 @@
 
 {% block conteudo %}
     <h2>Pedidos</h2>
-    <p><a href="{% url 'pedido_criar' %}">Novo pedido</a></p>
+    <p>{% if perms.confeitaria.add_pedido or user.cliente %}<a href="{% url 'pedido_criar' %}">Novo pedido</a>{% endif %}</p>
 
     <table border="1" cellpadding="5">
         <tr>
@@ -26,8 +26,8 @@
                 <td>{{ pedido.calcular_total }}</td>
                 <td>
                     <a href="{% url 'pedido_detalhar' pedido.id %}">Ver</a>
-                    <a href="{% url 'pedido_editar' pedido.id %}">Editar</a>
-                    <a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>
+                    {% if perms.confeitaria.change_pedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}<a href="{% url 'pedido_editar' pedido.id %}">Editar</a>{% endif %}
+                    {% if perms.confeitaria.delete_pedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}<a href="{% url 'pedido_excluir' pedido.id %}">Excluir</a>{% endif %}
                 </td>
             </tr>
         {% empty %}

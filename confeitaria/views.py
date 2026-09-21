@@ -1,8 +1,8 @@
 from django.contrib.auth import login
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_not_required
+from django.contrib.auth.decorators import login_not_required, permission_required
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CustomUserCreationForm
+from .access import clientes_permitidos, pedidos_permitidos
 
 from .forms import (
     CategoriaForm,
@@ -13,25 +13,10 @@ from .forms import (
 )
 from .models import Categoria, Cliente, Produto, Pedido, ItemPedido
 
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-
-        if form.is_valid():
-            usuario = form.get_user()
-            login(request, usuario)
-            return redirect('inicio')
-    else:
-        form = AuthenticationForm()
-
-    return render(
-        request,
-        'confeitaria/login.html',
-        {'form': form}
-    )
-
-
+@login_not_required
 def cadastrar(request):
+    if request.user.is_authenticated:
+        return redirect('inicio')
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
 
@@ -52,18 +37,24 @@ def inicio(request):
 # Lista todas as categorias cadastradas.
 def categoria_listar(request):
     categorias = Categoria.objects.all()
+    if not request.user.has_perm('confeitaria.view_categoria'):
+        categorias = categorias.filter(ativo=True)
     contexto = {'categorias': categorias}
     return render(request, 'confeitaria/categoria/listar.html', contexto)
 
 
 # Mostra os detalhes de uma categoria.
 def categoria_detalhar(request, pk):
-    categoria = get_object_or_404(Categoria, pk=pk)
+    categorias = Categoria.objects.all()
+    if not request.user.has_perm('confeitaria.view_categoria'):
+        categorias = categorias.filter(ativo=True)
+    categoria = get_object_or_404(categorias, pk=pk)
     contexto = {'categoria': categoria}
     return render(request, 'confeitaria/categoria/detalhar.html', contexto)
 
 
 # Cria uma nova categoria.
+@permission_required('confeitaria.add_categoria', raise_exception=True)
 def categoria_criar(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST)
@@ -78,6 +69,7 @@ def categoria_criar(request):
 
 
 # Edita uma categoria existente.
+@permission_required('confeitaria.change_categoria', raise_exception=True)
 def categoria_editar(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
 
@@ -94,6 +86,7 @@ def categoria_editar(request, pk):
 
 
 # Exclui uma categoria existente.
+@permission_required('confeitaria.delete_categoria', raise_exception=True)
 def categoria_excluir(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
 
@@ -109,18 +102,24 @@ def categoria_excluir(request, pk):
 # Lista todos os produtos cadastrados.
 def produto_listar(request):
     produtos = Produto.objects.all()
+    if not request.user.has_perm('confeitaria.view_produto'):
+        produtos = produtos.filter(ativo=True, categoria__ativo=True)
     contexto = {'produtos': produtos}
     return render(request, 'confeitaria/produto/listar.html', contexto)
 
 
 # Mostra os detalhes de um produto.
 def produto_detalhar(request, pk):
-    produto = get_object_or_404(Produto, pk=pk)
+    produtos = Produto.objects.all()
+    if not request.user.has_perm('confeitaria.view_produto'):
+        produtos = produtos.filter(ativo=True, categoria__ativo=True)
+    produto = get_object_or_404(produtos, pk=pk)
     contexto = {'produto': produto}
     return render(request, 'confeitaria/produto/detalhar.html', contexto)
 
 
 # Cria um novo produto.
+@permission_required('confeitaria.add_produto', raise_exception=True)
 def produto_criar(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
@@ -135,6 +134,7 @@ def produto_criar(request):
 
 
 # Edita um produto existente.
+@permission_required('confeitaria.change_produto', raise_exception=True)
 def produto_editar(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
 
@@ -151,6 +151,7 @@ def produto_editar(request, pk):
 
 
 # Exclui um produto existente.
+@permission_required('confeitaria.delete_produto', raise_exception=True)
 def produto_excluir(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
 
@@ -164,28 +165,30 @@ def produto_excluir(request, pk):
 
 # FUNCOES DE CLIENTE
 # Lista todos os clientes cadastrados.
+@permission_required('confeitaria.view_cliente', raise_exception=True)
 def cliente_listar(request):
-    clientes = Cliente.objects.all()
+    clientes = clientes_permitidos(request.user)
     contexto = {'clientes': clientes}
     return render(request, 'confeitaria/cliente/listar.html', contexto)
 
 
 # Mostra os detalhes de um cliente.
 def cliente_detalhar(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
+    cliente = get_object_or_404(clientes_permitidos(request.user, 'view'), pk=pk)
     contexto = {'cliente': cliente}
     return render(request, 'confeitaria/cliente/detalhar.html', contexto)
 
 
 # Cria um novo cliente.
+@permission_required('confeitaria.add_cliente', raise_exception=True)
 def cliente_criar(request):
     if request.method == 'POST':
-        form = ClienteForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('cliente_listar')
     else:
-        form = ClienteForm()
+        form = CustomUserCreationForm()
 
     contexto = {'form': form}
     return render(request, 'confeitaria/cliente/form.html', contexto)
@@ -193,13 +196,13 @@ def cliente_criar(request):
 
 # Edita um cliente existente.
 def cliente_editar(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
+    cliente = get_object_or_404(clientes_permitidos(request.user, 'change'), pk=pk)
 
     if request.method == 'POST':
         form = ClienteForm(request.POST, instance=cliente)
         if form.is_valid():
             form.save()
-            return redirect('cliente_listar')
+            return redirect('cliente_detalhar', pk=cliente.pk)
     else:
         form = ClienteForm(instance=cliente)
 
@@ -208,8 +211,9 @@ def cliente_editar(request, pk):
 
 
 # Exclui um cliente existente.
+@permission_required('confeitaria.delete_cliente', raise_exception=True)
 def cliente_excluir(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
+    cliente = get_object_or_404(clientes_permitidos(request.user, 'delete'), pk=pk)
 
     if request.method == 'POST':
         cliente.delete()
@@ -222,14 +226,14 @@ def cliente_excluir(request, pk):
 # FUNCOES DE PEDIDO
 # Lista todos os pedidos cadastrados.
 def pedido_listar(request):
-    pedidos = Pedido.objects.all()
+    pedidos = pedidos_permitidos(request.user)
     contexto = {'pedidos': pedidos}
     return render(request, 'confeitaria/pedido/listar.html', contexto)
 
 
 # Mostra os detalhes de um pedido.
 def pedido_detalhar(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
+    pedido = get_object_or_404(pedidos_permitidos(request.user, 'view_pedido'), pk=pk)
     contexto = {'pedido': pedido}
     return render(request, 'confeitaria/pedido/detalhar.html', contexto)
 
@@ -237,12 +241,12 @@ def pedido_detalhar(request, pk):
 # Cria um novo pedido.
 def pedido_criar(request):
     if request.method == 'POST':
-        form = PedidoForm(request.POST)
+        form = PedidoForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('pedido_listar')
     else:
-        form = PedidoForm()
+        form = PedidoForm(user=request.user)
 
     contexto = {'form': form}
     return render(request, 'confeitaria/pedido/form.html', contexto)
@@ -250,15 +254,15 @@ def pedido_criar(request):
 
 # Edita um pedido existente.
 def pedido_editar(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
+    pedido = get_object_or_404(pedidos_permitidos(request.user, 'change_pedido'), pk=pk)
 
     if request.method == 'POST':
-        form = PedidoForm(request.POST, instance=pedido)
+        form = PedidoForm(request.POST, instance=pedido, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('pedido_listar')
     else:
-        form = PedidoForm(instance=pedido)
+        form = PedidoForm(instance=pedido, user=request.user)
 
     contexto = {'form': form, 'pedido': pedido}
     return render(request, 'confeitaria/pedido/form.html', contexto)
@@ -266,7 +270,7 @@ def pedido_editar(request, pk):
 
 # Exclui um pedido existente.
 def pedido_excluir(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
+    pedido = get_object_or_404(pedidos_permitidos(request.user, 'delete_pedido'), pk=pk)
 
     if request.method == 'POST':
         pedido.delete()
@@ -279,14 +283,17 @@ def pedido_excluir(request, pk):
 # FUNCOES DE ITEM PEDIDO
 # Lista todos os itens de pedido cadastrados.
 def item_pedido_listar(request):
-    itens_pedido = ItemPedido.objects.all()
+    itens_pedido = ItemPedido.objects.filter(pedido__in=pedidos_permitidos(request.user, 'view_itempedido'))
     contexto = {'itens_pedido': itens_pedido}
     return render(request, 'confeitaria/item_pedido/listar.html', contexto)
 
 
 # Mostra os detalhes de um item de pedido.
 def item_pedido_detalhar(request, pk):
-    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+    item_pedido = get_object_or_404(
+        ItemPedido, pk=pk,
+        pedido__in=pedidos_permitidos(request.user, 'view_itempedido'),
+    )
     contexto = {'item_pedido': item_pedido}
     return render(request, 'confeitaria/item_pedido/detalhar.html', contexto)
 
@@ -294,12 +301,12 @@ def item_pedido_detalhar(request, pk):
 # Cria um novo item de pedido.
 def item_pedido_criar(request):
     if request.method == 'POST':
-        form = ItemPedidoForm(request.POST)
+        form = ItemPedidoForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('item_pedido_listar')
     else:
-        form = ItemPedidoForm()
+        form = ItemPedidoForm(user=request.user)
 
     contexto = {'form': form}
     return render(request, 'confeitaria/item_pedido/form.html', contexto)
@@ -307,15 +314,18 @@ def item_pedido_criar(request):
 
 # Edita um item de pedido existente.
 def item_pedido_editar(request, pk):
-    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+    item_pedido = get_object_or_404(
+        ItemPedido, pk=pk,
+        pedido__in=pedidos_permitidos(request.user, 'change_itempedido'),
+    )
 
     if request.method == 'POST':
-        form = ItemPedidoForm(request.POST, instance=item_pedido)
+        form = ItemPedidoForm(request.POST, instance=item_pedido, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('item_pedido_listar')
     else:
-        form = ItemPedidoForm(instance=item_pedido)
+        form = ItemPedidoForm(instance=item_pedido, user=request.user)
 
     contexto = {'form': form, 'item_pedido': item_pedido}
     return render(request, 'confeitaria/item_pedido/form.html', contexto)
@@ -323,7 +333,10 @@ def item_pedido_editar(request, pk):
 
 # Exclui um item de pedido existente.
 def item_pedido_excluir(request, pk):
-    item_pedido = get_object_or_404(ItemPedido, pk=pk)
+    item_pedido = get_object_or_404(
+        ItemPedido, pk=pk,
+        pedido__in=pedidos_permitidos(request.user, 'delete_itempedido'),
+    )
 
     if request.method == 'POST':
         item_pedido.delete()

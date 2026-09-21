@@ -11,8 +11,8 @@
     <p><strong>Ativo:</strong> {{ categoria.ativo }}</p>
 
     <p>
-        <a href="{% url 'categoria_editar' categoria.id %}">Editar</a>
-        <a href="{% url 'categoria_excluir' categoria.id %}">Excluir</a>
+        {% if perms.confeitaria.change_categoria %}<a href="{% url 'categoria_editar' categoria.id %}">Editar</a>{% endif %}
+        {% if perms.confeitaria.delete_categoria %}<a href="{% url 'categoria_excluir' categoria.id %}">Excluir</a>{% endif %}
         <a href="{% url 'categoria_listar' %}">Voltar</a>
     </p>
 {% endblock %}

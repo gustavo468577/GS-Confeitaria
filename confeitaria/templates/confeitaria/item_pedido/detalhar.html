@@ -13,8 +13,8 @@
     <p><strong>Subtotal:</strong> {{ item_pedido.calcular_subtotal }}</p>
 
     <p>
-        <a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>
-        <a href="{% url 'item_pedido_excluir' item_pedido.id %}">Excluir</a>
+        {% if perms.confeitaria.change_itempedido or item_pedido.pedido.cliente_id == user.pk and item_pedido.pedido.status == 'PENDENTE' %}<a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>{% endif %}
+        {% if perms.confeitaria.delete_itempedido or item_pedido.pedido.cliente_id == user.pk and item_pedido.pedido.status == 'PENDENTE' %}<a href="{% url 'item_pedido_excluir' item_pedido.id %}">Excluir</a>{% endif %}
         <a href="{% url 'item_pedido_listar' %}">Voltar</a>
     </p>
 {% endblock %}

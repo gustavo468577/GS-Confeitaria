@@ -13,8 +13,8 @@
     <p><strong>Ativo:</strong> {{ produto.ativo }}</p>
 
     <p>
-        <a href="{% url 'produto_editar' produto.id %}">Editar</a>
-        <a href="{% url 'produto_excluir' produto.id %}">Excluir</a>
+        {% if perms.confeitaria.change_produto %}<a href="{% url 'produto_editar' produto.id %}">Editar</a>{% endif %}
+        {% if perms.confeitaria.delete_produto %}<a href="{% url 'produto_excluir' produto.id %}">Excluir</a>{% endif %}
         <a href="{% url 'produto_listar' %}">Voltar</a>
     </p>
 {% endblock %}  

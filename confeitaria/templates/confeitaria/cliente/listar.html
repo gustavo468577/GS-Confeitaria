@@ -4,7 +4,7 @@
 
 {% block conteudo %}
     <h2>Clientes</h2>
-    <p><a href="{% url 'cliente_criar' %}">Novo cliente</a></p>
+    <p>{% if perms.confeitaria.add_cliente %}<a href="{% url 'cliente_criar' %}">Novo cliente</a>{% endif %}</p>
 
     <table border="1" cellpadding="5">
         <tr>
@@ -26,8 +26,8 @@
                 <td>{{ cliente.endereco }}</td>
                 <td>
                     <a href="{% url 'cliente_detalhar' cliente.id %}">Ver</a>
-                    <a href="{% url 'cliente_editar' cliente.id %}">Editar</a>
-                    <a href="{% url 'cliente_excluir' cliente.id %}">Excluir</a>
+                    {% if perms.confeitaria.change_cliente or cliente.pk == user.pk %}<a href="{% url 'cliente_editar' cliente.id %}">Editar</a>{% endif %}
+                    {% if perms.confeitaria.delete_cliente %}<a href="{% url 'cliente_excluir' cliente.id %}">Excluir</a>{% endif %}
                 </td>
             </tr>
         {% empty %}
