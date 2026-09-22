@@ -1,0 +1,3 @@
+{% if user.is_authenticated and user.cliente and produto.ativo and produto.categoria.ativo %}
+<a class="btn btn-feane" href="{% url 'item_pedido_criar' %}?produto={{ produto.pk }}" aria-label="Comprar {{ produto.nome }}">Comprar</a>
+{% endif %}

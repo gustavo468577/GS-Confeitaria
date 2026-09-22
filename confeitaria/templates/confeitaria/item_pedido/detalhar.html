@@ -9,8 +9,8 @@
     <p><strong>Pedido:</strong> {{ item_pedido.pedido }}</p>
     <p><strong>Produto:</strong> {{ item_pedido.produto }}</p>
     <p><strong>Quantidade:</strong> {{ item_pedido.quantidade }}</p>
-    <p><strong>Valor unitario:</strong> {{ item_pedido.produto.preco }}</p>
-    <p><strong>Subtotal:</strong> {{ item_pedido.calcular_subtotal }}</p>
+    <p><strong>Valor unitário:</strong> R$ {{ item_pedido.produto.preco|floatformat:2 }}</p>
+    <p><strong>Subtotal:</strong> R$ {{ item_pedido.calcular_subtotal|floatformat:2 }}</p>
 
     <p>
         {% if perms.confeitaria.change_itempedido or item_pedido.pedido.cliente_id == user.pk and item_pedido.pedido.status == 'PENDENTE' %}<a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>{% endif %}

@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
+from django.templatetags.static import static
 from django.contrib.auth.models import User
 
 
@@ -21,6 +24,29 @@ class Produto(models.Model):
     descricao = models.TextField(blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     ativo = models.BooleanField(default=True)
+    imagem = models.ImageField(
+        'Imagem enviada', upload_to='produtos/%Y/%m/', blank=True,
+        help_text='Opcional. A imagem enviada tem prioridade sobre o endereço externo.',
+    )
+    imagem_externa = models.URLField(
+        'URL da imagem', max_length=1000, blank=True,
+        validators=[URLValidator(schemes=['http', 'https'])],
+        help_text='Opcional. Informe um endereço completo com http:// ou https://.',
+    )
+
+    @property
+    def imagem_url(self):
+        if self.imagem:
+            return self.imagem.url
+        if self.imagem_externa:
+            try:
+                URLValidator(schemes=['http', 'https'])(self.imagem_externa)
+            except ValidationError:
+                pass
+            else:
+                return self.imagem_externa
+        return static('feane/images/f1.png')
+
 
     def __str__(self):
         return self.nome

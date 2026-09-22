@@ -1,0 +1,7 @@
+{% if messages %}
+<div aria-live="polite">
+    {% for message in messages %}
+    <div class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% else %}alert-{{ message.tags|default:'info' }}{% endif %}" role="status">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,54 +1,26 @@
 {% extends 'confeitaria/base.html' %}
-
-{% block titulo %}
-    Produtos
-{% endblock %}
-
+{% block titulo %}Produtos{% endblock %}
+{% block panel_class %}food_section{% endblock %}
 {% block conteudo %}
-
-    <h2>Produtos</h2>
-
-    <p>
-        {% if perms.confeitaria.add_produto %}<a href="{% url 'produto_criar' %}">Novo produto</a>{% endif %}
-    </p>
-
-    <table border="1" cellpadding="5">
-
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-            <th>Ativo</th>
-            <th>Ações</th>
-        </tr>
-
+<section aria-labelledby="catalog-title">
+    <div class="page-heading">
+        <div><h2 id="catalog-title">Nosso catálogo</h2><p>Escolha uma categoria e conheça os produtos.</p></div>
+        {% if perms.confeitaria.add_produto %}<a class="btn btn-feane" href="{% url 'produto_criar' %}">Novo produto</a>{% endif %}
+    </div>
+    <nav aria-label="Filtrar produtos por categoria">
+        <ul class="filters_menu">
+            <li{% if not categoria_selecionada %} class="active"{% endif %}><a href="{% url 'produto_listar' %}"{% if not categoria_selecionada %} aria-current="true"{% endif %}>Todos</a></li>
+            {% for categoria in categorias %}
+            <li{% if categoria_selecionada == categoria.pk|stringformat:'s' %} class="active"{% endif %}><a href="{% url 'produto_listar' %}?categoria={{ categoria.pk }}"{% if categoria_selecionada == categoria.pk|stringformat:'s' %} aria-current="true"{% endif %}>{{ categoria.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <div class="row">
         {% for produto in produtos %}
-
-            <tr>
-                <td>{{ produto.id }}</td>
-                <td>{{ produto.nome }}</td>
-                <td>{{ produto.categoria }}</td>
-                <td>{{ produto.preco }}</td>
-                <td>{{ produto.ativo }}</td>
-
-                <td>
-                    <a href="{% url 'produto_detalhar' produto.id %}">Ver</a>
-
-                    {% if perms.confeitaria.change_produto %}<a href="{% url 'produto_editar' produto.id %}">Editar</a>{% endif %}
-
-                    {% if perms.confeitaria.delete_produto %}<a href="{% url 'produto_excluir' produto.id %}">Excluir</a>{% endif %}
-                </td>
-            </tr>
-
+            {% include 'confeitaria/includes/product_card.html' %}
         {% empty %}
-
-            <tr>
-                <td colspan="6">Nenhum produto cadastrado.</td>
-            </tr>
-
+            <div class="col-12"><div class="empty-state"><h3>Nenhum produto encontrado</h3><p>Não há produtos disponíveis nesta seleção.</p>{% if categoria_selecionada %}<a class="btn btn-outline-feane" href="{% url 'produto_listar' %}">Ver todos</a>{% endif %}</div></div>
         {% endfor %}
-
-    </table>
-
+    </div>
+</section>
 {% endblock %}

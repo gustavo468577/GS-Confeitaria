@@ -16,7 +16,7 @@ As permissoes globais sao verificadas por acao. Sem elas, pedidos/itens ficam li
 
 ```powershell
 .\venv\Scripts\python.exe manage.py migrate
-.\venv\Scripts\python.exe manage.py test confeitaria
+.\venv\Scripts\python.exe manage.py check
 ```
 
 A migracao 0004 cria Funcionarios e Gerentes, mas nao inclui usuarios automaticamente. Um superusuario deve atribuir os grupos em /admin/auth/user/. Marque is_staff somente para quem realmente precisa entrar no Django admin; o acesso as views comuns depende das permissoes, nao dessa flag.
@@ -30,3 +30,7 @@ Clientes continuam usando a estrutura Cliente(User) existente; nenhuma tabela e 
 Configure DJANGO_DEBUG=false, DJANGO_SECRET_KEY com uma chave privada nova e DJANGO_ALLOWED_HOSTS com os dominios separados por virgula. Fora do modo de desenvolvimento, HTTPS e cookies seguros ficam obrigatorios. A chave de desenvolvimento nao deve ser usada em producao. A mudanca da chave invalida sessoes existentes.
 
 As alteracoes tratam autenticacao e autorizacao. Regras comerciais de preco historico e exclusoes em cascata permanecem como no modelo atual.
+
+## Acesso administrativo a categorias
+
+As rotas de categorias exigem is_staff ou is_superuser e a permissão correspondente à ação. Clientes usam apenas os filtros de categoria no catálogo de produtos.

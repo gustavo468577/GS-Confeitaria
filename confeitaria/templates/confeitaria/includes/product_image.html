@@ -1,0 +1,3 @@
+{% load static %}
+<img src="{{ produto.imagem_url }}" alt="{{ produto.nome }}" class="{{ image_class|default:'' }}"
+     data-fallback="{% static 'feane/images/f1.png' %}" loading="lazy" decoding="async">

@@ -1,0 +1,17 @@
+<div class="col-sm-6 col-lg-4">
+    <article class="box">
+        <div class="img-box">{% include 'confeitaria/includes/product_image.html' %}</div>
+        <div class="detail-box">
+            <p class="product-category">{{ produto.categoria.nome }}{% if not produto.ativo %} · Inativo{% endif %}{% if not produto.categoria.ativo %} · Categoria inativa{% endif %}</p>
+            <h3>{{ produto.nome }}</h3>
+            <p>{{ produto.descricao|default:"Sem descrição cadastrada."|truncatewords:28 }}</p>
+            <div class="product-price">R$ {{ produto.preco|floatformat:2 }}</div>
+            <div class="product-actions">
+                {% include 'confeitaria/includes/buy_button.html' %}
+                <a class="btn btn-feane" href="{% url 'produto_detalhar' produto.pk %}" aria-label="Ver detalhes de {{ produto.nome }}">Ver detalhes</a>
+                {% if perms.confeitaria.change_produto %}<a href="{% url 'produto_editar' produto.pk %}">Editar</a>{% endif %}
+                {% if perms.confeitaria.delete_produto %}<a href="{% url 'produto_excluir' produto.pk %}">Excluir</a>{% endif %}
+            </div>
+        </div>
+    </article>
+</div>

@@ -1,8 +1,29 @@
 {% extends 'confeitaria/base.html' %}
-
-{% block titulo %}Inicio{% endblock %}
-
+{% load static %}
+{% block titulo %}Início{% endblock %}
+{% block hero %}
+<section class="app-hero slider_section" aria-labelledby="welcome-title">
+    <div class="container hero-content">
+        <div class="hero-image"><img src="{% static 'confeitaria/images/bolo-inicio.png' %}" alt="Bolo coberto com chantilly e morangos"></div>
+        <div class="detail-box">
+            <h1 id="welcome-title">Um momento mais doce</h1>
+            <p>Explore os produtos da nossa confeitaria e acompanhe seus pedidos. Bem-vindo, {{ user.first_name|default:user.username }}.</p>
+            <a class="btn btn-feane" href="{% url 'produto_listar' %}">Conhecer os produtos</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block panel_class %}home-content{% endblock %}
 {% block conteudo %}
-    <h2>Tela inicial</h2>
-    <p>Escolha uma opcao no menu acima.</p>
+<div class="quick-links">
+    <a class="quick-link" href="{% url 'produto_listar' %}"><i class="fa fa-birthday-cake" aria-hidden="true"></i><h3>Nosso catálogo</h3><p>Veja os produtos e encontre seu favorito.</p></a>
+    <a class="quick-link" href="{% url 'pedido_listar' %}"><i class="fa fa-list-alt" aria-hidden="true"></i><h3>Pedidos</h3><p>Consulte os detalhes e acompanhe o andamento.</p></a>
+    {% if perms.confeitaria.add_pedido or user.cliente %}
+    <a class="quick-link" href="{% url 'pedido_criar' %}"><i class="fa fa-plus-circle" aria-hidden="true"></i><h3>Novo pedido</h3><p>Informe a entrega e depois adicione os produtos.</p></a>
+    {% elif user.is_staff or user.is_superuser %}
+        {% if perms.confeitaria.view_categoria %}
+        <a class="quick-link" href="{% url 'categoria_listar' %}"><i class="fa fa-tags" aria-hidden="true"></i><h3>Categorias</h3><p>Explore a organização do catálogo.</p></a>
+        {% endif %}
+    {% endif %}
+</div>
 {% endblock %}

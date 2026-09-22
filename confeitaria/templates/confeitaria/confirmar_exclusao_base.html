@@ -1,0 +1,13 @@
+{% extends 'confeitaria/base.html' %}
+{% block conteudo %}
+    <h2>{% block delete_heading %}Confirmar exclusão{% endblock %}</h2>
+    {% block delete_description %}{% endblock %}
+    <div class="alert alert-warning">A exclusão é definitiva.{% block cascade_warning %}{% endblock %}</div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit">Confirmar exclusão</button>
+            {% block cancel_link %}{% endblock %}
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'confeitaria/base.html' %}
+{% block panel_class %}page-panel form-panel{% endblock %}
+{% block conteudo %}
+    <h2>{% block form_heading %}Preencha os dados{% endblock %}</h2>
+    {% block form_intro %}{% endblock %}
+    <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+        {% csrf_token %}
+        {% block form_hidden %}{% endblock %}
+        {% include 'confeitaria/includes/form_fields.html' %}
+        <div class="form-actions">
+            <button type="submit">{% block submit_label %}Salvar{% endblock %}</button>
+            {% block cancel_link %}{% endblock %}
+        </div>
+    </form>
+    {% block form_after %}{% endblock %}
+{% endblock %}

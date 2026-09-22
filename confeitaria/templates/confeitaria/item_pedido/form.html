@@ -1,14 +1,5 @@
-{% extends 'confeitaria/base.html' %}
-
-{% block titulo %}Formulario de item de pedido{% endblock %}
-
-{% block conteudo %}
-    <h2>Formulario de item de pedido</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-        <a href="{% url 'item_pedido_listar' %}">Cancelar</a>
-    </form>
-{% endblock %}
+{% extends 'confeitaria/form_base.html' %}
+{% block titulo %}{% if item_pedido %}Editar item{% else %}Novo item de pedido{% endif %}{% endblock %}
+{% block form_heading %}{% if item_pedido %}Editar item{% else %}Novo item de pedido{% endif %}{% endblock %}
+{% block form_intro %}<p>Selecione o pedido, o produto e a quantidade desejada.</p>{% endblock %}
+{% block cancel_link %}<a href="{% url 'item_pedido_listar' %}">Cancelar</a>{% endblock %}

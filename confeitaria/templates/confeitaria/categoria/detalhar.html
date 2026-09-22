@@ -7,8 +7,8 @@
 
     <p><strong>ID:</strong> {{ categoria.id }}</p>
     <p><strong>Nome:</strong> {{ categoria.nome }}</p>
-    <p><strong>Descricao:</strong> {{ categoria.descricao }}</p>
-    <p><strong>Ativo:</strong> {{ categoria.ativo }}</p>
+    <p><strong>Descrição:</strong> {{ categoria.descricao|linebreaksbr|default:"Sem descrição." }}</p>
+    <p><strong>Ativo:</strong> {{ categoria.ativo|yesno:"Sim,Não" }}</p>
 
     <p>
         {% if perms.confeitaria.change_categoria %}<a href="{% url 'categoria_editar' categoria.id %}">Editar</a>{% endif %}

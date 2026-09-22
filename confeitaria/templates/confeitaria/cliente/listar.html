@@ -4,17 +4,18 @@
 
 {% block conteudo %}
     <h2>Clientes</h2>
-    <p>{% if perms.confeitaria.add_cliente %}<a href="{% url 'cliente_criar' %}">Novo cliente</a>{% endif %}</p>
+    <p>{% if perms.confeitaria.add_cliente %}<a href="{% url 'cliente_criar' %}" class="btn btn-feane">Novo cliente</a>{% endif %}</p>
 
-    <table border="1" cellpadding="5">
+    <div class="table-responsive" role="region" aria-label="Tabela de registros" tabindex="0">
+    <table class="table table-hover">
         <tr>
             <th>ID</th>
-            <th>Usuario</th>
+            <th>Usuário</th>
             <th>Nome</th>
             <th>Telefone</th>
             <th>Email</th>
-            <th>Endereco</th>
-            <th>Acoes</th>
+            <th>Endereço</th>
+            <th>Ações</th>
         </tr>
         {% for cliente in clientes %}
             <tr>
@@ -36,4 +37,5 @@
             </tr>
         {% endfor %}
     </table>
+    </div>
 {% endblock %}

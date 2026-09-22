@@ -1,14 +1,4 @@
-{% extends 'confeitaria/base.html' %}
-
-{% block titulo %}Formulario de cliente{% endblock %}
-
-{% block conteudo %}
-    <h2>Formulario de cliente</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-        <a href="{% url 'inicio' %}">Cancelar</a>
-    </form>
-{% endblock %}
+{% extends 'confeitaria/form_base.html' %}
+{% block titulo %}{% if cliente %}Editar perfil{% else %}Novo cliente{% endif %}{% endblock %}
+{% block form_heading %}{% if cliente %}Editar perfil{% else %}Novo cliente{% endif %}{% endblock %}
+{% block cancel_link %}{% if cliente %}<a href="{% url 'cliente_detalhar' cliente.pk %}">Cancelar</a>{% else %}<a href="{% url 'cliente_listar' %}">Cancelar</a>{% endif %}{% endblock %}

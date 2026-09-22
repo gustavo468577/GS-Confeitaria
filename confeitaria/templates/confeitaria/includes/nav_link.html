@@ -1,0 +1,4 @@
+{% load form_ui %}
+<li class="nav-item{% if active or current|startswith:prefix %} active{% endif %}">
+    <a class="nav-link" href="{% url route %}"{% if active or current|startswith:prefix %} aria-current="page"{% endif %}>{{ label }}</a>
+</li>

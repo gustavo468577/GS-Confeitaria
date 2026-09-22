@@ -8,25 +8,29 @@
     <p><strong>ID:</strong> {{ pedido.id }}</p>
     <p><strong>Cliente:</strong> {{ pedido.cliente }}</p>
     <p><strong>Criado em:</strong> {{ pedido.criado_em }}</p>
-    <p><strong>Data de entrega:</strong> {{ pedido.data_entrega }}</p>
-    <p><strong>Status:</strong> {{ pedido.status }}</p>
-    <p><strong>Observacao:</strong> {{ pedido.observacao }}</p>
-    <p><strong>Total:</strong> {{ pedido.calcular_total }}</p>
+    <p><strong>Data de entrega:</strong> {{ pedido.data_entrega|default_if_none:"Não informada" }}</p>
+    <p><strong>Status:</strong> {{ pedido.get_status_display }}</p>
+    <p><strong>Observação:</strong> {{ pedido.observacao }}</p>
+    <p><strong>Total:</strong> R$ {{ pedido.calcular_total|floatformat:2 }}</p>
 
     <h3>Itens do pedido</h3>
-    <table border="1" cellpadding="5">
+    {% if perms.confeitaria.add_itempedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}
+    <p><a class="btn btn-feane" href="{% url 'item_pedido_criar' %}">Adicionar item</a></p>
+    {% endif %}
+    <div class="table-responsive" role="region" aria-label="Tabela de registros" tabindex="0">
+    <table class="table table-hover">
         <tr>
             <th>Produto</th>
             <th>Quantidade</th>
-            <th>Valor unitario</th>
+            <th>Valor unitário</th>
             <th>Subtotal</th>
         </tr>
         {% for item in pedido.itens.all %}
             <tr>
                 <td>{{ item.produto }}</td>
                 <td>{{ item.quantidade }}</td>
-                <td>{{ item.produto.preco }}</td>
-                <td>{{ item.calcular_subtotal }}</td>
+                <td>R$ {{ item.produto.preco|floatformat:2 }}</td>
+                <td>R$ {{ item.calcular_subtotal|floatformat:2 }}</td>
             </tr>
         {% empty %}
             <tr>
@@ -34,6 +38,7 @@
             </tr>
         {% endfor %}
     </table>
+    </div>
 
     <p>
         {% if perms.confeitaria.change_pedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}<a href="{% url 'pedido_editar' pedido.id %}">Editar</a>{% endif %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Group
-from .forms import ClienteForm, CustomUserCreationForm
+from .forms import ClienteForm, CustomUserCreationForm, ProdutoForm
 
 from .models import Categoria, Cliente, ItemPedido, Pedido, Produto
 
@@ -19,6 +19,7 @@ class CategoriaAdmin(admin.ModelAdmin):
 # Configura a exibicao de produtos no Django Admin.
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
+    form = ProdutoForm
     list_display = ("nome", "categoria", "preco", "ativo")
     list_filter = ("categoria", "ativo")
     search_fields = ("nome", "descricao", "categoria__nome")

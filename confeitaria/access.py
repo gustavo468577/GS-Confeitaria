@@ -1,4 +1,8 @@
 """Permissoes globais para a equipe; propriedade dos registros para clientes."""
+from functools import wraps
+
+from django.core.exceptions import PermissionDenied
+
 from .models import Cliente, Pedido
 
 
@@ -18,3 +22,14 @@ def pedidos_permitidos(user, permissao='view_pedido'):
     if not permissao.startswith('view_'):
         pedidos = pedidos.filter(status=Pedido.Status.PENDENTE)
     return pedidos
+
+
+def administrador_required(view):
+    """Restrict administrative pages without replacing action permissions."""
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        user = request.user
+        if not user.is_active or not (user.is_staff or user.is_superuser):
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+    return wrapped

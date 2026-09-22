@@ -1,14 +1,6 @@
-{% extends 'confeitaria/base.html' %}
-
+{% extends 'confeitaria/confirmar_exclusao_base.html' %}
 {% block titulo %}Excluir categoria{% endblock %}
-
-{% block conteudo %}
-    <h2>Excluir categoria</h2>
-    <p>Tem certeza que deseja excluir a categoria "{{ categoria }}"?</p>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Confirmar exclusao</button>
-        <a href="{% url 'categoria_listar' %}">Cancelar</a>
-    </form>
-{% endblock %}
+{% block delete_heading %}Excluir categoria{% endblock %}
+{% block delete_description %}<p>Deseja excluir a categoria “{{ categoria }}”?</p>{% endblock %}
+{% block cascade_warning %} Os produtos desta categoria e seus itens de pedido também serão excluídos.{% endblock %}
+{% block cancel_link %}<a href="{% url 'categoria_listar' %}">Cancelar</a>{% endblock %}

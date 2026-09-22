@@ -1,25 +1,7 @@
-{% extends 'confeitaria/base.html' %}
-
-{% block titulo %}Cadastro{% endblock %}
-
-{% block conteudo %}
-
-<div class="card">
-<h2>Criar conta</h2>
-
-<form method="post">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <button type="submit">Cadastrar</button>
-</form>
-
-<p>
-    Já possui uma conta?
-    <a href="{% url 'login' %}">Faça login</a>.
-</p>
-
-</div>
-
-{% endblock %}
+{% extends 'confeitaria/form_base.html' %}
+{% block titulo %}Criar conta{% endblock %}
+{% block panel_class %}page-panel auth-panel{% endblock %}
+{% block form_heading %}Crie sua conta{% endblock %}
+{% block form_intro %}<p>Preencha seus dados para começar a usar a confeitaria.</p>{% endblock %}
+{% block submit_label %}Cadastrar{% endblock %}
+{% block form_after %}<p class="mt-4 mb-0">Já possui uma conta? <a href="{% url 'login' %}">Faça login</a>.</p>{% endblock %}

@@ -1,0 +1,49 @@
+<header class="header_section app-header">
+    <div class="container">
+        <nav class="navbar navbar-expand-xl custom_nav-container" aria-label="Navegação principal">
+            <a class="navbar-brand" href="{% url 'inicio' %}"><span>GS Confeitaria</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Abrir ou fechar menu"><span></span></button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto">
+                    {% with current=request.resolver_match.url_name %}
+                    {% if current == 'inicio' %}
+                        {% include 'confeitaria/includes/nav_link.html' with route='inicio' label='Início' active=True prefix='' %}
+                    {% else %}
+                        {% include 'confeitaria/includes/nav_link.html' with route='inicio' label='Início' active=False prefix='' %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        {% include 'confeitaria/includes/nav_link.html' with route='produto_listar' label='Produtos' prefix='produto_' active=False %}
+                        {% if user.is_staff or user.is_superuser %}
+                            {% if perms.confeitaria.view_categoria %}
+                                {% include 'confeitaria/includes/nav_link.html' with route='categoria_listar' label='Categorias' prefix='categoria_' active=False %}
+                            {% endif %}
+                        {% endif %}
+                        {% if perms.confeitaria.view_cliente %}
+                            {% include 'confeitaria/includes/nav_link.html' with route='cliente_listar' label='Clientes' prefix='cliente_' active=False %}
+                        {% endif %}
+                        {% include 'confeitaria/includes/nav_link.html' with route='pedido_listar' label='Pedidos' active=False prefix='pedido_' %}
+                        {% include 'confeitaria/includes/nav_link.html' with route='item_pedido_listar' label='Itens' active=False prefix='item_pedido_' %}
+                    {% endif %}
+                    {% endwith %}
+                </ul>
+                <div class="user_option">
+                    {% if user.is_authenticated %}
+                        {% if user.cliente %}
+                        <a href="{% url 'cliente_detalhar' user.pk %}" class="account-link" title="Meu perfil">
+                            <i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}
+                        </a>
+                        {% else %}<span class="account-link">{{ user.username }}</span>{% endif %}
+                        {% if user.is_staff %}<a href="{% url 'admin:index' %}" class="account-link">Admin</a>{% endif %}
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}<button type="submit" class="btn btn-feane btn-sm">Sair</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="account-link">Entrar</a>
+                        <a href="{% url 'cadastro' %}" class="btn btn-feane">Criar conta</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

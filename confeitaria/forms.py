@@ -18,7 +18,7 @@ class CategoriaForm(forms.ModelForm):
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
-        fields = ['categoria', 'nome', 'descricao', 'preco', 'ativo']
+        fields = ['categoria', 'nome', 'descricao', 'preco', 'ativo', 'imagem', 'imagem_externa']
 
 
 # Formulario usado para criar e editar clientes.

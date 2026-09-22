@@ -4,17 +4,18 @@
 
 {% block conteudo %}
     <h2>Itens de pedido</h2>
-    <p>{% if perms.confeitaria.add_itempedido or user.cliente %}<a href="{% url 'item_pedido_criar' %}">Novo item de pedido</a>{% endif %}</p>
+    <p>{% if perms.confeitaria.add_itempedido or user.cliente %}<a href="{% url 'item_pedido_criar' %}" class="btn btn-feane">Novo item de pedido</a>{% endif %}</p>
 
-    <table border="1" cellpadding="5">
+    <div class="table-responsive" role="region" aria-label="Tabela de registros" tabindex="0">
+    <table class="table table-hover">
         <tr>
             <th>ID</th>
             <th>Pedido</th>
             <th>Produto</th>
             <th>Quantidade</th>
-            <th>Valor unitario</th>
+            <th>Valor unitário</th>
             <th>Subtotal</th>
-            <th>Acoes</th>
+            <th>Ações</th>
         </tr>
         {% for item_pedido in itens_pedido %}
             <tr>
@@ -22,8 +23,8 @@
                 <td>{{ item_pedido.pedido }}</td>
                 <td>{{ item_pedido.produto }}</td>
                 <td>{{ item_pedido.quantidade }}</td>
-                <td>{{ item_pedido.produto.preco }}</td>
-                <td>{{ item_pedido.calcular_subtotal }}</td>
+                <td>R$ {{ item_pedido.produto.preco|floatformat:2 }}</td>
+                <td>R$ {{ item_pedido.calcular_subtotal|floatformat:2 }}</td>
                 <td>
                     <a href="{% url 'item_pedido_detalhar' item_pedido.id %}">Ver</a>
                     {% if perms.confeitaria.change_itempedido or item_pedido.pedido.cliente_id == user.pk and item_pedido.pedido.status == 'PENDENTE' %}<a href="{% url 'item_pedido_editar' item_pedido.id %}">Editar</a>{% endif %}
@@ -36,4 +37,5 @@
             </tr>
         {% endfor %}
     </table>
+    </div>
 {% endblock %}

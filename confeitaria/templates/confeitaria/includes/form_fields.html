@@ -1,0 +1,15 @@
+{% load form_ui %}
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">Revise os campos abaixo para continuar.
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+{% for hidden in form.hidden_fields %}{{ hidden }}{{ hidden.errors }}{% endfor %}
+{% for field in form.visible_fields %}
+<div class="form-group{% if field.field.widget.input_type == 'checkbox' %} field-checkbox{% endif %}">
+    {{ field.label_tag }}
+    {{ field|bootstrap_field }}
+    {% if field.help_text %}<div class="form-text text-muted" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</div>{% endif %}
+    {% if field.errors %}<div class="invalid-feedback d-block" id="{{ field.auto_id }}_errors">{{ field.errors }}</div>{% endif %}
+</div>
+{% endfor %}

@@ -1,14 +1,4 @@
-{% extends 'confeitaria/base.html' %}
-
-{% block titulo %}Formulario de categoria{% endblock %}
-
-{% block conteudo %}
-    <h2>Formulario de categoria</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
-        <a href="{% url 'categoria_listar' %}">Cancelar</a>
-    </form>
-{% endblock %}
+{% extends 'confeitaria/form_base.html' %}
+{% block titulo %}{% if categoria %}Editar categoria{% else %}Nova categoria{% endif %}{% endblock %}
+{% block form_heading %}{% if categoria %}Editar categoria{% else %}Nova categoria{% endif %}{% endblock %}
+{% block cancel_link %}<a href="{% url 'categoria_listar' %}">Cancelar</a>{% endblock %}
