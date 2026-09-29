@@ -1,3 +1,10 @@
+/* Ponto único de entrada dos estilos do projeto. O tema Feane continua
+   disponível, mas não precisa ser listado em cada template. */
+@import url("bootstrap.css");
+@import url("font-awesome.min.css");
+@import url("style.css");
+@import url("responsive.css");
+
 :root { --feane-gold: #ffbe33; --feane-dark: #222831; }
 body { background: #f7f6f2; min-height: 100vh; display: flex; flex-direction: column; }
 .app-header { background: var(--feane-dark); }

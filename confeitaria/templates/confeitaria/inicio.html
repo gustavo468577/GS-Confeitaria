@@ -18,7 +18,7 @@
 <div class="quick-links">
     <a class="quick-link" href="{% url 'produto_listar' %}"><i class="fa fa-birthday-cake" aria-hidden="true"></i><h3>Nosso catálogo</h3><p>Veja os produtos e encontre seu favorito.</p></a>
     <a class="quick-link" href="{% url 'pedido_listar' %}"><i class="fa fa-list-alt" aria-hidden="true"></i><h3>Pedidos</h3><p>Consulte os detalhes e acompanhe o andamento.</p></a>
-    {% if perms.confeitaria.add_pedido or user.cliente %}
+    {% if not user.is_superuser and perms.confeitaria.add_pedido or user.cliente and not user.is_superuser %}
     <a class="quick-link" href="{% url 'pedido_criar' %}"><i class="fa fa-plus-circle" aria-hidden="true"></i><h3>Novo pedido</h3><p>Informe a entrega e depois adicione os produtos.</p></a>
     {% elif user.is_staff or user.is_superuser %}
         {% if perms.confeitaria.view_categoria %}

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_not_required, permission_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import Http404
 from .forms import CustomUserCreationForm
@@ -220,6 +221,7 @@ def cliente_criar(request):
 
 
 # Edita um cliente existente.
+@permission_required('confeitaria.change_cliente', raise_exception=True)
 def cliente_editar(request, pk):
     cliente = get_object_or_404(clientes_permitidos(request.user, 'change'), pk=pk)
 
@@ -267,6 +269,12 @@ def pedido_detalhar(request, pk):
 
 # Cria um novo pedido.
 def pedido_criar(request):
+    if request.user.is_superuser:
+        raise PermissionDenied
+    # Contas administrativas sem perfil Cliente não podem criar pedidos
+    # próprios; funcionários/gerentes continuam podendo criar pela permissão.
+    if not request.user.has_perm('confeitaria.add_pedido') and not Cliente.objects.filter(pk=request.user.pk).exists():
+        raise PermissionDenied
     if request.method == 'POST':
         form = PedidoForm(request.POST, user=request.user)
         if form.is_valid():
@@ -330,6 +338,8 @@ def item_pedido_detalhar(request, pk):
 
 # Cria um novo item de pedido.
 def item_pedido_criar(request):
+    if request.user.is_superuser:
+        raise PermissionDenied
     if request.method == 'POST':
         form = ItemPedidoForm(request.POST, user=request.user)
         if form.is_valid():

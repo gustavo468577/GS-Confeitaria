@@ -14,7 +14,7 @@
     <p><strong>Total:</strong> R$ {{ pedido.calcular_total|floatformat:2 }}</p>
 
     <h3>Itens do pedido</h3>
-    {% if perms.confeitaria.add_itempedido or pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}
+    {% if not user.is_superuser and perms.confeitaria.add_itempedido or not user.is_superuser and pedido.cliente_id == user.pk and pedido.status == 'PENDENTE' %}
     <p><a class="btn btn-feane" href="{% url 'item_pedido_criar' %}">Adicionar item</a></p>
     {% endif %}
     <div class="table-responsive" role="region" aria-label="Tabela de registros" tabindex="0">

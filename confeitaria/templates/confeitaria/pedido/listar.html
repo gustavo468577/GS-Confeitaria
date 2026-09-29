@@ -4,7 +4,7 @@
 
 {% block conteudo %}
     <h2>Pedidos</h2>
-    <p>{% if perms.confeitaria.add_pedido or user.cliente %}<a href="{% url 'pedido_criar' %}" class="btn btn-feane">Novo pedido</a>{% endif %}</p>
+    <p>{% if not user.is_superuser and perms.confeitaria.add_pedido or user.cliente and not user.is_superuser %}<a href="{% url 'pedido_criar' %}" class="btn btn-feane">Novo pedido</a>{% endif %}</p>
 
     <div class="table-responsive" role="region" aria-label="Tabela de registros" tabindex="0">
     <table class="table table-hover">

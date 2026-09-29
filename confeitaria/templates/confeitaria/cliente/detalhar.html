@@ -15,7 +15,7 @@
     <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
 
     <p>
-        {% if perms.confeitaria.change_cliente or cliente.pk == user.pk %}<a href="{% url 'cliente_editar' cliente.id %}">Editar</a>{% endif %}
+        {% if perms.confeitaria.change_cliente %}<a href="{% url 'cliente_editar' cliente.id %}">Editar</a>{% endif %}
         {% if perms.confeitaria.delete_cliente %}<a href="{% url 'cliente_excluir' cliente.id %}">Excluir</a>{% endif %}
         <a href="{% url 'inicio' %}">Voltar</a>
     </p>
